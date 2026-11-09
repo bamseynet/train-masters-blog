@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Train Masters: building a cosy railway game with Claude Code</title>
+<meta name="description" content="My 2 year old loves trains: how Claude Code built a cozy train game for the Amazon Fire TV Stick, then took control of the TV to test and play it itself.">
+<link rel="canonical" href="https://train-masters.bamsey.net/">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon.png">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+<link rel="apple-touch-icon" href="/favicon.png">
+<meta property="og:title" content="Train Masters: building a cosy railway game with Claude Code">
+<meta property="og:description" content="My 2 year old loves trains: how Claude Code built a cozy train game for the Amazon Fire TV Stick, then took control of the TV to test and play it itself.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://train-masters.bamsey.net/">
+<meta property="og:site_name" content="Train Masters">
+<meta property="article:published_time" content="2026-11-09">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Train Masters: building a cosy railway game with Claude Code">
+<meta name="twitter:description" content="My 2 year old loves trains: how Claude Code built a cozy train game for the Amazon Fire TV Stick, then took control of the TV to test and play it itself.">
+<meta name="twitter:image" content="https://train-masters.bamsey.net/images/evening.jpg">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"Train Masters: a cosy model railway for your TV, built with Claude Code",
+"description":"My 2 year old loves trains: how Claude Code built a cozy train game for the Amazon Fire TV Stick, then took control of the TV to test and play it itself.","image":"https://train-masters.bamsey.net/images/evening.jpg","datePublished":"2026-11-09","dateModified":"2026-11-09",
+"author":{"@type":"Organization","name":"Train Masters"},"publisher":{"@type":"Organization","name":"Train Masters","logo":{"@type":"ImageObject","url":"https://train-masters.bamsey.net/favicon.png"}},
+"mainEntityOfPage":"https://train-masters.bamsey.net/","about":["Claude Code","Amazon Fire TV Stick","model railway game"]}
+</script>
+<meta property="og:image" content="https://train-masters.bamsey.net/images/evening.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Nunito:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+/* Layout: a single long-read column, like a railway-society magazine page; photos break out slightly wider. */
+:root{
+  --bg:#f6f1e5; --paper:#fffcf3; --ink:#2b2a22; --muted:#6b675a; --line:#e2d9c3;
+  --green:#24543b; --brass:#b5832a; --red:#a8402f; --code:#efe6d1;
+  --display:"Fraunces",Georgia,serif; --body:"Nunito",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#141a16; --paper:#1a221d; --ink:#ece6d6; --muted:#a8ad9f; --line:#2f3a32;
+  --green:#8fcca6; --brass:#e0b25c; --red:#ef8b78; --code:#222c25; color-scheme:dark } }
+:root[data-theme="dark"]{ --bg:#141a16; --paper:#1a221d; --ink:#ece6d6; --muted:#a8ad9f; --line:#2f3a32; --green:#8fcca6; --brass:#e0b25c; --red:#ef8b78; --code:#222c25; color-scheme:dark }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.7 var(--body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+main{max-width:760px;margin:0 auto;padding-block:40px 80px}
+header.hero{max-width:760px;margin:0 auto;padding-top:48px}
+.kicker{font:600 13px var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--brass)}
+h1,h2,h3{font-family:var(--display);line-height:1.15;text-wrap:balance;color:var(--green)}
+h1{font-size:clamp(34px,6vw,54px);margin:.3em 0 .35em}
+h2{font-size:clamp(26px,4vw,34px);margin:2.2em 0 .5em}
+h3{font-size:22px;margin:1.6em 0 .3em}
+p{margin:0 0 1.05em}
+.lede{font-size:21px;color:var(--muted)}
+.byline{font-size:14px;color:var(--muted);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 0;margin:24px 0 0}
+figure{margin:28px -40px;display:flex;flex-direction:column;gap:8px}
+figure img{width:100%;height:auto;display:block;border-radius:10px;border:1px solid var(--line);background:var(--paper)}
+figcaption{font-size:14px;color:var(--muted);padding:0 40px}
+.msg{max-width:520px;margin:24px auto 0}
+.msg img{border-radius:12px}
+.msg figcaption{padding:6px 0 0;text-align:left}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:880px){ figure{margin:24px 0} figcaption{padding:0} }
+@media (max-width:560px){ .pair{grid-template-columns:1fr} }
+pre{background:var(--code);border-radius:10px;padding:14px 16px;overflow-x:auto;font:500 14px/1.55 var(--mono);border:1px solid var(--line)}
+code{font:500 .86em var(--mono);background:var(--code);padding:1px 5px;border-radius:5px}
+pre code{background:none;padding:0}
+blockquote{margin:1.4em 0;padding:4px 0 4px 18px;border-left:3px solid var(--brass);color:var(--muted);font-style:italic}
+.bug{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:0 0 12px}
+.bug b{color:var(--red)}
+ul{padding-left:22px} li{margin:.3em 0}
+a{color:var(--green);text-underline-offset:3px}
+.toast{display:inline-block;background:#fff6da;color:#2a1d05;font-weight:700;border-radius:14px;padding:6px 14px;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+footer{max-width:760px;margin:0 auto;padding:24px 0 60px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="kicker">A Claude Code build diary</div>
+  <h1>Train Masters: a cosy model railway for your TV, built with Claude Code</h1>
+  <p class="lede">My 2 year old loves trains. This is how I went from wondering if Claude Code could create a cozy train game for the Amazon Firestick to it remotely taking control of my TV to play the game itself.</p>
+  <figure class="msg"><img src="images/whatsapp.png" alt="A WhatsApp message: Claude just taken over when I'm watching TV. Is this the end? Have they taken over?" width="961" height="233"><figcaption>Once set up, Claude would open the game on our TV to test new changes. Not everyone was pleased&hellip;</figcaption></figure>
+  <p class="byline">November 2026 · about a 10-minute read</p>
+</header>
+<main>
+
+<figure><img src="images/evening.jpg" alt="A village and railway lines in golden evening light, with trains running between fields" width="1400" height="788"><figcaption>Golden evening light on a randomly generated map. Every map is different: villages, farms, rivers and hills, all made fresh from a seed.</figcaption></figure>
+
+<p>Train Masters is a <strong>cosy, peaceful</strong> railway game for the Amazon Fire TV Stick. You lay track across a randomly generated English countryside, build stations in the villages, buy steam and diesel trains, and then sit back and watch them run. There's a 2D map for building and a 3D view for watching, including a cab view so you can ride along with the driver.</p>
+
+<p>Almost all of the code was written by Claude Code, Anthropic's coding agent, working in the terminal. All that was needed was direction on the style and feel: what the game should feel like, what was annoying, what was missing. This post is about how that worked in practice. It covers the setup that let Claude test on the real TV, how it was tested, and the fun features.</p>
+
+<h2>The approach Claude chose</h2>
+
+<p>The whole game is <strong>one HTML file</strong>: an 812 KB page with a 2D canvas for the map and <a href="https://threejs.org/">Three.js</a> for the 3D view. It runs inside a tiny Android app, which is just a full-screen WebView, because Fire TV Sticks run Android underneath. GitHub Actions builds the app on every push, so nobody installs Android Studio.</p>
+
+<p>Claude picked that shape on purpose. A single file is easy for an agent to read, test and change, and the same page runs in a desktop browser for fast automated tests. The hard part was that a Fire TV Stick is a very modest computer, and a game that's smooth on a laptop can crawl on the TV.</p>
+
+<figure><img src="images/map.jpg" alt="The 2D map view with stations, departure boards, coloured trains and the remote-friendly toolbar" width="1400" height="788"><figcaption>The 2D map, built for the TV remote: arrows move, OK builds, and every station has a departure board.</figcaption></figure>
+
+<h2>Letting Claude drive the real TV</h2>
+
+<p>Claude didn't just write code and hope. It installed each build on a real Fire TV Stick, pressed buttons on the "remote", read the game's state, measured the frame rate and took screenshots, all over the home Wi-Fi. A typical loop looked like this:</p>
+
+<ol>
+  <li>Change the game, run the Playwright tests locally, watch them pass.</li>
+  <li>Run <code>tools/tv/deploy.sh</code>: commit and push, wait for the CI run of <em>that exact commit</em>, download the APK and <code>adb install</code> it on the TV.</li>
+  <li>Connect to the game running on the TV through Chrome DevTools, and run JavaScript inside it: "how many trains are moving?", "what's the frame rate here?", "open the 3D cab view".</li>
+  <li>Take a screenshot of the TV with <code>adb exec-out screencap</code> and look at it, because tests can't tell you a thing looks ugly.</li>
+</ol>
+
+<p>Being able to look at the TV made a huge difference. Many fixes started with Claude saying "that doesn't look right" on a screenshot it had just taken.</p>
+
+<h3>How to set it up yourself</h3>
+
+<p>All of this works with any WebView-based app on a Fire TV. The steps:</p>
+
+<p><strong>1. Turn on debugging on the Fire TV.</strong> Settings → My Fire TV → About, click the device name seven times to unlock Developer options, then turn on <em>ADB debugging</em> (and <em>Apps from unknown sources</em> for your own APKs). Note the TV's IP address from Settings → Network.</p>
+
+<p><strong>2. Connect over Wi-Fi</strong> from your computer and accept the prompt on the TV the first time:</p>
+<pre><code>adb connect 192.168.1.50:5555      # your TV's address
+adb shell input keyevent 224       # wake it up
+adb shell input keyevent 23        # press OK (19-22 arrows, 4 Back, 82 Menu)
+adb exec-out screencap -p > tv.png # see what's on screen</code></pre>
+
+<p><strong>3. Make the WebView debuggable</strong> in debug builds of your app:</p>
+<pre><code>if (BuildConfig.DEBUG) WebView.setWebContentsDebuggingEnabled(true);</code></pre>
+
+<p><strong>4. Reach the page's DevTools.</strong> Each debuggable WebView exposes a socket named after its process. Forward it to your computer and ask for the page's websocket address:</p>
+<pre><code>PID=$(adb shell pidof com.example.yourgame)
+adb forward tcp:9399 localabstract:webview_devtools_remote_$PID
+curl -s localhost:9399/json       # -> "webSocketDebuggerUrl": "ws://localhost:9399/devtools/page/..."</code></pre>
+
+<p><strong>5. Evaluate JavaScript in the running game.</strong> This four-line Node script is the whole "remote control" Claude used hundreds of times:</p>
+<pre><code>// cdp.mjs  — node --experimental-websocket cdp.mjs "$WS" 'trains.length'
+const [,, url, expr] = process.argv;
+const ws = new WebSocket(url);
+ws.onopen = () =&gt; ws.send(JSON.stringify({id:1, method:'Runtime.evaluate',
+  params:{expression:expr, returnByValue:true, awaitPromise:true}}));
+ws.onmessage = m =&gt; { const d = JSON.parse(m.data); if (d.id===1) {
+  console.log(JSON.stringify(d.result.result.value ?? d.result)); process.exit(0); } };</code></pre>
+
+<p>A few lessons from doing this daily:</p>
+<ul>
+  <li><strong>Sign debug builds with a fixed key</strong> (Claude keeps it as a CI secret), so each new build installs over the last one and keeps the save games.</li>
+  <li><strong>The store copy is signed by Amazon</strong>, not by you, so nothing you build can install over it. Claude ended up giving debug builds their own package name ("Train Masters Dev") so they sit next to the real one.</li>
+  <li><strong>Measure on the device.</strong> CSS <code>backdrop-filter</code> and canvas <code>ctx.filter</code> looked fine on a laptop and took the stick down to 2–5 frames a second. Now they're banned in the project's <code>CLAUDE.md</code>.</li>
+  <li><strong>A sleeping TV pauses the app,</strong> so builds and measurements stall. Keyevent 224 wakes it.</li>
+  <li><strong>Write the rules down.</strong> <code>CLAUDE.md</code> holds the TV's address, the commands and the house rules ("never change the clock on the real saved railway"), so a fresh Claude session can carry on where the last one stopped.</li>
+</ul>
+
+<h2>Tests first, then the TV</h2>
+
+<p>Nearly every change started with a failing test. The suite now has about 50 Playwright test scripts, covering things like "trains keep a safe distance", "the whistle sounds when you ride in the cab" and "the passing loop is long enough for the longest train". Headless Chromium has quirks with WebGL: it stops drawing 3D frames after about half a second. So the tests step the 3D scene by hand, and Claude grabs the 3D canvas directly when it wants a picture.</p>
+
+<p>Given a brief of "four hours of bug hunting on the TV", Claude also mashed random remote buttons at the game (about 4,500 presses), copied real saved railways off the TV and ran them for days of game time on the computer, and checked the TV's graphics memory for leaks. Then it sent back a table of fourteen fixes with before-and-after screenshots.</p>
+
+<h2>Fun features</h2>
+
+<h3>Drive it yourself</h3>
+
+<p>In the cab or chase view you can take over any train. Up on the remote adds power (five notches), Down brakes (four notches), and OK blows the whistle. Signals still apply, so if you charge a red light you get an emergency stop. Pull into a platform and you're marked out of three stars:</p>
+
+<p><span class="toast">★★★ Perfect stop!</span> &nbsp; <span class="toast">★★☆ Good stop</span> &nbsp; <span class="toast">★☆☆ Too fast! The passengers spilled their tea</span></p>
+
+<figure class="pair">
+  <img src="images/drive-cab.jpg" alt="Driving a Pannier tank from the cab, with the dashboard showing speed, power notches, the signal and the next station" width="700" height="394">
+  <img src="images/drive-tea.jpg" alt="Coming into the station too fast earns one star and the message that the passengers spilled their tea" width="700" height="394">
+  <figcaption>The driving dashboard: speed, power notches, the signal ahead and the distance to the next stop. Come in too hot and the tea goes everywhere.</figcaption>
+</figure>
+
+<h3>Riding through the tunnels</h3>
+
+<p>Lay track into a hill and you get a tunnel. In the cab view you go in with the driver: the outside world disappears, it's just you, the rails and the tunnel walls until daylight appears at the far end. That took more work than it sounds. The camera has to fit inside the tunnel's bore, and anything outside the tunnel has to stay hidden, so the hillside doesn't poke through the walls.</p>
+
+<figure><img src="images/tunnel-cab.jpg" alt="The cab view inside a tunnel, looking along the rails towards the light at the end" width="1400" height="788"><figcaption>In the cab, inside a tunnel. Daylight at the far end.</figcaption></figure>
+
+<h3>The rest of the timetable</h3>
+
+<ul>
+  <li><strong>Real steam.</strong> Engines chuff slowly as they pull away and quicken as they gather speed, using real recordings. Every class has its own whistle or two-tone horn.</li>
+  <li><strong>Build a network for me.</strong> In Sandbox, pick a map and Train Masters lays a whole railway for you: stations, passing loops, signals and flyovers where lines cross. Then it picks the trains, or lets you choose them.</li>
+  <li><strong>Flyovers.</strong> Where two lines cross, one now goes over the other on a bridge, so trains never wait at a crossing.</li>
+  <li><strong>Display mode.</strong> Turn the TV into a living picture. The camera drifts between trains, stations and the countryside, with a little clock caption, and it can start by itself when nobody's pressing buttons.</li>
+  <li><strong>Seasons, weather, day and night,</strong> golden evenings, glowing windows at night and departure boards at every station.</li>
+</ul>
+
+<figure class="pair">
+  <img src="images/flyover.jpg" alt="A flyover where one railway line passes over another" width="700" height="394">
+  <img src="images/display.jpg" alt="Display mode: a wide view of the railway with a clock and day caption" width="700" height="394">
+  <figcaption>A flyover from above, and display mode turning the TV into a slow, peaceful picture.</figcaption>
+</figure>
+
+<h2>Shipping it</h2>
+
+<p>Claude also handled the boring-but-scary parts: a signed release build, the privacy policy page, store art (including a photo-real render of a little engine, made in Blender from a script), the in-app purchase for the 99p Pro upgrade, tested end to end with Amazon's App Tester, and the store listing text. Train Masters is now on the <strong>Amazon Appstore for Fire TV</strong>. Updates go out through Amazon's App Submission API: Claude builds the new version, uploads it as a draft, and stops until it's told to "submit".</p>
+
+<h2>And finally: ducks</h2>
+
+<p>The latest addition is the most heart-warming one. With <em>countryside life</em> on, the world around the railway gets busy in a quiet sort of way. Villagers are out and about depending on the time of day, cars and lorries pootle between villages, and tractors work the fields. Then there's the water:</p>
+
+<ul>
+  <li><strong>Ducks</strong> paddling about on the ponds,</li>
+  <li><strong>rowing boats</strong> drifting on the lakes,</li>
+  <li><strong>yachts</strong> sailing along the coast,</li>
+  <li><strong>narrowboats</strong> cruising the canals and waiting their turn at the locks,</li>
+  <li>and <strong>fishing boats</strong> heading out from the harbour in the morning and home again in the afternoon.</li>
+</ul>
+
+<figure class="pair">
+  <img src="images/ducks.jpg" alt="Ducks paddling on a pond right next to the railway line" width="700" height="394">
+  <img src="images/boats.jpg" alt="A little yacht sailing just off the coast" width="700" height="394">
+  <figcaption>Yes, there are boats. And some ducks. (Ducks on a pond by the line; a yacht off the coast.)</figcaption>
+</figure>
+
+<p>None of it changes how you play. It just makes the little world feel lived in, which is the whole point of a cosy game. Put the kettle on, pick a train, and watch it go.</p>
+
+</main>
+<footer>
+  <p>Train Masters is available on the Amazon Appstore for Fire TV. Built with <a href="https://claude.com/claude-code">Claude Code</a>. Steam sound: GWR 2800-class no. 2807 recorded by David J. Pitt (radio aporee, public domain).</p>
+</footer>
+</body>
+</html>

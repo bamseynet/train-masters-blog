@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://train-masters.bamsey.net/sitemap.xml
